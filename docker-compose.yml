@@ -1,0 +1,23 @@
+version: "3.1"
+
+services:
+  api:
+    container_name: api
+    build: ./
+    command: npm run start
+    restart: always
+    ports:
+      - "3000:3000"
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=diplom
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
