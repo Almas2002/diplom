@@ -11,6 +11,9 @@ export class CreateProductDto{
   calorie:number
   @ApiProperty()
   restaurantId:number
+
+  @ApiProperty()
+  price:number
 }
 export class ProductQuery{
   limit:number;

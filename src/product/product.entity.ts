@@ -19,7 +19,8 @@ export class Product {
   restaurant: Restorant;
   @Column({ type: 'float' })
   calorie: number;
-
+  @Column({default:0})
+  price:number;
   @OneToMany(() => Comments, comments => comments.product,{cascade:true})
   comments: Comments[];
 }

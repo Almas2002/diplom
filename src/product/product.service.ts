@@ -31,6 +31,7 @@ export class ProductService {
       .addSelect('product.description', 'description')
       .addSelect('product.image', 'image')
       .addSelect('product.calorie', 'calorie')
+      .addSelect('product.price', 'price')
       .addSelect('AVG(comments.star) as rating')
       .orderBy('product.id', 'DESC')
       .groupBy('product.id');
