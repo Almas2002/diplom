@@ -13,6 +13,8 @@ import { RoleModule } from './role/role.module';
 import { RestorantModule } from './restorans/restorant.module';
 import { ProductModule } from './product/product.module';
 import { CommentsModule } from './comments/comments.module';
+import { OrderModule } from './order/order.module';
+import { CartModule } from './cart/cart.module';
 
 require('dotenv').config();
 
@@ -31,7 +33,7 @@ require('dotenv').config();
   }),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
-    }), CategoryModule,AuthModule,UserModule,FileModule,RoleModule,RestorantModule,ProductModule,CommentsModule
+    }), CategoryModule,AuthModule,UserModule,FileModule,RoleModule,RestorantModule,ProductModule,CommentsModule,OrderModule,CartModule
   ],
   controllers: [AppController],
   providers: [AppService],

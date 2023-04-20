@@ -63,4 +63,7 @@ export class ProductService {
     return { product, avg };
   }
 
+  async getProductById(id: number) {
+    return await this.productRepository.findOne({where:{id}})
+  }
 }

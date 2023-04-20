@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Restorant } from '../restorans/restorant.entity';
 
 @Entity()
 export class Category{
@@ -8,4 +9,7 @@ export class Category{
   title:string;
   @Column()
   icon:string
+
+  @OneToMany(()=>Restorant,restorant=>restorant)
+  restaurants:Restorant[]
 }

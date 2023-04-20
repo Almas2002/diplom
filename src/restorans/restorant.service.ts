@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Restorant } from './restorant.entity';
 import { Repository } from 'typeorm';
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateRestorantDto } from './restorant.dto';
+import { CreateRestorantDto, QueryRestaurants } from './restorant.dto';
 import { v4 } from 'uuid';
 import { UserService } from '../user/user.service';
 
@@ -21,22 +21,31 @@ export class RestorantService {
     if (candidate) {
       throw new HttpException('у вас есть магазин', 400);
     }
-    const res = await this.restorantService.save({ title: dto.title, user: { id: userId }, uuid: await v4() });
+    const res = await this.restorantService.save({
+      title: dto.title,
+      user: { id: userId },
+      uuid: await v4(),
+      category: { id: dto.categoryId },
+    });
     await this.userService.addRoleForUser({ id: userId, role: 'MANAGER', email: null });
     return { id: res.id };
   }
 
 
-  async getAll() {
-    return this.restorantService.find();
+  async getAll(dto: QueryRestaurants) {
+    const query = this.restorantService.createQueryBuilder('restaurants');
+    if (dto?.categoryId) {
+      query.andWhere('restaurants.categoryId = :categoryId', { categoryId: dto.categoryId });
+    }
+    return await query.getMany();
   }
 
   async getByUiid(uuid: string) {
     return this.restorantService.findOne({ where: { uuid } });
   }
 
-  async my(id:number){
-    return await this.restorantService.findOne({where:{user:{id}}})
+  async my(id: number) {
+    return await this.restorantService.findOne({ where: { user: { id } } });
   }
 
 }
