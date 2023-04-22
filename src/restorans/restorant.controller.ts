@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { RestorantService } from './restorant.service';
 import { CreateRestorantDto, QueryRestaurants } from './restorant.dto';
@@ -35,4 +35,18 @@ export class RestorantController {
   async getOne(@Param('uuid')uiid: string) {
     return this.restorantService.getByUiid(uiid);
   }
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Put('/add-category/:id')
+  async addCategory(@Param('id')id:number,@UserDecorator('id')userId: number){
+    return this.restorantService.addCategory(id,userId)
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Put('/remove-category/:id')
+  async removeCategory(@Param('id')id:number,@UserDecorator('id')userId: number){
+    return this.restorantService.removeCategory(id,userId)
+  }
+
 }

@@ -6,15 +6,6 @@ import { User } from '../user/user.entity';
 export class Order{
   @PrimaryGeneratedColumn()
   id:number;
-  @Column()
-  apartment: string;
-  @Column()
-  building: string;
-  @Column()
-  address: string;
-  @Column()
-  phone: string;
-
   @OneToMany(() => RestaurantCart, market => market.order)
   marketOrders: RestaurantCart[];
 

@@ -23,8 +23,7 @@ export class OrderService{
     if (!orderProducts.length) {
       throw new HttpException('У вас нету товаров в корзине', 400);
     }
-    order = await this.orderRepository.save({ user:{id},
-      address:dto.address,apartment:dto.apartment,building:dto.building,phone:dto.phone });
+    order = await this.orderRepository.save({ user:{id}});
     let orderMarket: RestaurantCart = null;
     for (let i = 0; i < orderProducts.length; i++) {
       product = orderProducts[i].product;

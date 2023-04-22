@@ -1,4 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn, JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from '../user/user.entity';
 import { Product } from '../product/product.entity';
 import { Comments } from '../comments/comments.entity';
@@ -15,10 +24,12 @@ export class Restorant {
   @OneToOne(() => User, user => user)
   @JoinColumn({name:"user_id"})
   user: User;
-  @ManyToOne(()=>Category,category=>category)
-  category:Category
   @OneToMany(() => Product, product => product.restaurant)
   products: Product[];
   @OneToMany(() => Comments, comments => comments.restaurant,{cascade:true})
   comments: Comments[];
+
+  @ManyToMany(()=>Category,category=>category.restaurants)
+  @JoinTable()
+  categories:Category[]
 }

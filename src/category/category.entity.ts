@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Restorant } from '../restorans/restorant.entity';
 
 @Entity()
@@ -10,6 +10,6 @@ export class Category{
   @Column()
   icon:string
 
-  @OneToMany(()=>Restorant,restorant=>restorant)
+  @ManyToMany(()=>Restorant,res=>res.categories)
   restaurants:Restorant[]
 }
