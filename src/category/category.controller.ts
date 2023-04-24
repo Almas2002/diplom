@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpException, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './category.dto';
+import { CreateCategoryDto, QueryCategories } from './category.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -21,7 +21,7 @@ export class CategoryController {
   }
 
   @Get()
-  getCategories() {
-    return this.categoryService.getCategories();
+  getCategories(@Query()query:QueryCategories) {
+    return this.categoryService.getCategories(query);
   }
 }

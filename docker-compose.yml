@@ -18,6 +18,14 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+  webserver:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - api
 
 volumes:
   pgdata:
