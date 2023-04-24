@@ -1,15 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,{cors:{origin:"*"}});
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin:["*","https://diploma-food-app.vercel.app/","http://localhost:3000/"],
+    origin:["*"],
     methods: ['GET','HEAD','PUT','PATCH','POST','DELETE', 'OPTIONS'],
 
     //credentials:true
   })
+  app.use(cookieParser())
+
   const config = new DocumentBuilder()
     .setTitle("restaurant")
     .setDescription("Documentation for REST API")
