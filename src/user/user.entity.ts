@@ -12,7 +12,8 @@ export class User {
   password: string;
   @ManyToMany(() => Role, role => role.users)
   roles: Role[];
-
+  @Column({default:0})
+  score:number
   @OneToMany(()=>Order,Order=>Order)
   orders:Order[]
 }

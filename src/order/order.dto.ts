@@ -3,6 +3,7 @@ import { StatusOfOrder } from './restaurant-cart.entity';
 
 
 export class CreateOrderDto {
+  place:string
 }
 
 export class OrderQuery {

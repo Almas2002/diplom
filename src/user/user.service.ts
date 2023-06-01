@@ -71,10 +71,16 @@ export class UserService {
   }
 
   async getUserByEmail(email: string) {
-    return this.userRepository.findOne({ where: { email }, select: ['password', 'id', 'email'],relations:["roles"] });
+    return this.userRepository.findOne({ where: { email }, select: ['password', 'id', 'email'], relations: ['roles'] });
   }
 
   async getUserId(id: number) {
-    return this.userRepository.findOne({ where: { id } ,relations:["roles"]});
+    return this.userRepository.findOne({ where: { id }, relations: ['roles'] });
+  }
+
+  async updateScore(id: number, score: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    user.score = score;
+    await this.userRepository.save(user);
   }
 }

@@ -8,7 +8,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Product } from '../product/product.entity';
 
 @Injectable()
-export class OrderService{
+export class OrderService {
   constructor(@InjectRepository(Order) private orderRepository: Repository<Order>,
               @InjectRepository(RestaurantCart) private orderRestaurant: Repository<RestaurantCart>,
               private cartItemService: CartItemService) {
@@ -23,20 +23,20 @@ export class OrderService{
     if (!orderProducts.length) {
       throw new HttpException('У вас нету товаров в корзине', 400);
     }
-    order = await this.orderRepository.save({ user:{id}});
+    order = await this.orderRepository.save({ user: { id }, place: dto.place });
     let orderMarket: RestaurantCart = null;
     for (let i = 0; i < orderProducts.length; i++) {
       product = orderProducts[i].product;
 
-      totalPrice += (product.price * orderProducts[i].qty)
+      totalPrice += (product.price * orderProducts[i].qty);
       orderMarket = await this.orderRestaurant.findOne({ where: { restaurant: product.restaurant, order: order } });
       if (orderMarket) {
         await this.cartItemService.updateCartItemToOrder(orderProducts[i].id, orderMarket);
-        await this.orderRestaurant.update({ id: orderMarket.id }, { totalPrice: orderMarket.totalPrice + (product.price * orderProducts[i].qty)  });
+        await this.orderRestaurant.update({ id: orderMarket.id }, { totalPrice: orderMarket.totalPrice + (product.price * orderProducts[i].qty) });
       } else {
-        orderMarket = await this.orderRestaurant.save({ restaurant: product.restaurant, order: order ,});
+        orderMarket = await this.orderRestaurant.save({ restaurant: product.restaurant, order: order });
         await this.cartItemService.updateCartItemToOrder(orderProducts[i].id, orderMarket);
-        await this.orderRestaurant.update({ id: orderMarket.id }, { totalPrice: orderMarket.totalPrice + (product.price * orderProducts[i].qty)  });
+        await this.orderRestaurant.update({ id: orderMarket.id }, { totalPrice: orderMarket.totalPrice + (product.price * orderProducts[i].qty) });
       }
 
     }
@@ -51,20 +51,21 @@ export class OrderService{
   async getOrderById(id: number): Promise<Order> {
     return this.orderRepository.findOne({
       where: { id },
-      relations: ['marketOrders', 'marketOrders.items','marketOrders.market','marketOrders.items.product','marketOrders.items.product.images'],
+      relations: ['marketOrders', 'marketOrders.items', 'marketOrders.market', 'marketOrders.items.product', 'marketOrders.items.product.images'],
     });
   }
-  async getOrdersToMarket(dto:OrderMarketQuery,userId:number){
+
+  async getOrdersToMarket(dto: OrderMarketQuery, userId: number) {
     const limit = dto?.limit || 10;
     const page = dto?.page || 1;
     const offset = page * limit - limit;
-    const query = this.orderRestaurant.createQueryBuilder("order")
-      .leftJoin("order.restaurant","restaurant")
-      .where("restaurant.user_id = :userId",{userId})
-      .leftJoinAndSelect('order.items','items')
-      .leftJoinAndSelect('items.product', 'product')
-    if(dto?.status){
-      query.andWhere("order.status = :status",{status:dto.status})
+    const query = this.orderRestaurant.createQueryBuilder('order')
+      .leftJoin('order.restaurant', 'restaurant')
+      .where('restaurant.user_id = :userId', { userId })
+      .leftJoinAndSelect('order.items', 'items')
+      .leftJoinAndSelect('items.product', 'product');
+    if (dto?.status) {
+      query.andWhere('order.status = :status', { status: dto.status });
     }
 
     query.limit(limit);
@@ -75,11 +76,12 @@ export class OrderService{
 
   }
 
-  async getOrdersToMarketOne(id:number){
-    return await this.orderRestaurant.findOne({where:{id},relations:["items","items.product"]})
+  async getOrdersToMarketOne(id: number) {
+    return await this.orderRestaurant.findOne({ where: { id }, relations: ['items', 'items.product'] });
   }
-  async getOrdersMarketUpdate(id:number,status:StatusOfOrder){
-    await  this.orderRestaurant.update({id},{status})
+
+  async getOrdersMarketUpdate(id: number, status: StatusOfOrder) {
+    await this.orderRestaurant.update({ id }, { status });
   }
 
   async getOrder(dto: OrderQuery, userId: number): Promise<{ data: Order[], count: number }> {
@@ -90,7 +92,7 @@ export class OrderService{
     const query = await this.orderRepository.createQueryBuilder('order')
       .andWhere('order.user_id = :userId', { userId })
       .leftJoinAndSelect('order.marketOrders', 'marketOrders')
-      .leftJoinAndSelect('marketOrders.items','items')
+      .leftJoinAndSelect('marketOrders.items', 'items')
       .leftJoinAndSelect('items.product', 'product');
     query.limit(limit);
     query.offset(offset);
