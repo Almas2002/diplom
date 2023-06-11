@@ -18,7 +18,7 @@ export class RestaurantCart{
   id:number;
   @ManyToOne(()=>Restorant,res=>res)
   restaurant:Restorant
-  @ManyToOne(() => Order, order => order)
+  @ManyToOne(() => Order, order => order.restorantItems)
   order: Order;
   @Column({ default: 0, type: 'float' })
   totalPrice: number;

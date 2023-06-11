@@ -16,4 +16,7 @@ export class Order {
 
   @Column({ default: 0, type: 'float' })
   totalPrice: number;
+
+  @OneToMany(()=>RestaurantCart,res=>res.order)
+  restorantItems:RestaurantCart[]
 }
