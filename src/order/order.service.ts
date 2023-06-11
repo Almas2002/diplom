@@ -62,7 +62,7 @@ export class OrderService {
     const query = this.orderRestaurant.createQueryBuilder('order')
       .leftJoin('order.restaurant', 'restaurant')
       .where('restaurant.user_id = :userId', { userId })
-      .leftJoin('order.order', 'order')
+      .leftJoinAndSelect('order.order', 'order')
       .leftJoinAndSelect('order.items', 'items')
       .leftJoinAndSelect('items.product', 'product');
     if (dto?.status) {
