@@ -59,14 +59,14 @@ export class OrderService {
     const limit = dto?.limit || 10;
     const page = dto?.page || 1;
     const offset = page * limit - limit;
-    const query = this.orderRestaurant.createQueryBuilder('order')
-      .leftJoin('order.restaurant', 'restaurant')
+    const query = this.orderRestaurant.createQueryBuilder('orders')
+      .leftJoin('orders.restaurant', 'restaurant')
       .where('restaurant.user_id = :userId', { userId })
-      .leftJoinAndSelect('order.order', 'order')
-      .leftJoinAndSelect('order.items', 'items')
+      .leftJoinAndSelect('orders.order', 'order')
+      .leftJoinAndSelect('orders.items', 'items')
       .leftJoinAndSelect('items.product', 'product');
     if (dto?.status) {
-      query.andWhere('order.status = :status', { status: dto.status });
+      query.andWhere('orders.status = :status', { status: dto.status });
     }
 
     query.limit(limit);
